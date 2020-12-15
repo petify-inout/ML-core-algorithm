@@ -7,6 +7,7 @@ import numpy as np
 import pickle
 import argparse
 from data_preprocess_util import dataArrange
+from collections import Counter
 
 def train():
     x = data_preprocess()
@@ -20,21 +21,25 @@ def train():
     def accuracy(y_true, y_pred):
         accuracy = np.sum(y_true == y_pred) / len(y_true)
         return accuracy
+    clf_array = []
+    for count in range(10):
+        X_train, X_test, y_train, y_test = train_test_split(x,y, test_size = .2, train_size = .8)
+        X_train_val = X_train.values
+        X_test_val =X_test.values
+        clf = DecisionTree()
+        clf.fit(X_train_val,y_train)
+        clf_array.append(clf)
+    
+    
 
-    X_train, X_test, y_train, y_test = train_test_split(x,y, test_size = .2, train_size = .8)
-    X_train_val = X_train.values
-    X_test_val =X_test.values
-    clf = DecisionTree()
-    clf.fit(X_train_val,y_train)
+    # y_pred = clf.predict(X_test_val)
+    # acc = accuracy(y_test, y_pred)
 
-    y_pred = clf.predict(X_test_val)
-    acc = accuracy(y_test, y_pred)
-
-    print ("Accuracy:", acc)
+    # print ("Accuracy:", acc)
 
 
     with open('model','wb') as model_file:
-        pickle.dump(clf,model_file)
+        pickle.dump(clf_array,model_file)
 
     with open('encode_model','wb') as model_file:
         pickle.dump(encode,model_file)
@@ -52,9 +57,27 @@ def prediction(X_raw):
     X = dataArrange(symp_list , X_raw)
     X = [X]
 
-    pred = (clf.predict(X))
-    pred = encode.inverse_transform(pred)
-    print(pred[0])
+    pred_array = []
+    for count in range(10):
+        pred = (clf[count].predict(X))
+        pred = encode.inverse_transform(pred)
+        pred_array.append(pred[0])
+    
+
+    counter = Counter(pred_array)
+    iterator = counter.most_common()
+
+    disease_prediction = []
+
+    for i in iterator:
+      
+        probability = i[1]
+        probability/=10
+        probability *= 100        
+        temp = { "disease" : i[0], "probability" : probability}
+        disease_prediction.append(temp)
+    
+    print(disease_prediction)
 
     infile.close
     sympfile.close

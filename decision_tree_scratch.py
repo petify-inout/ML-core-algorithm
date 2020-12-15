@@ -106,4 +106,5 @@ class DecisionTree:
     def _most_common_label(self, y):
         counter = Counter(y)
         most_common = counter.most_common(1)[0][0]
+        # most_common = dict(counter)
         return most_common

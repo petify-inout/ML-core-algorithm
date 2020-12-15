@@ -1,12 +1,12 @@
 import pandas as pd
-from data_preprocess_util import symp_counter
+from data_preprocess_util import symp_counter , iniData, egGenerater, dataArrange, del_duplicates, symp_process
 import csv 
-from data_preprocess_util import iniData 
+# from data_preprocess_util import iniData 
 import numpy as np
-from data_preprocess_util import egGenerater
-from data_preprocess_util import dataArrange 
-from data_preprocess_util import del_duplicates
-from data_preprocess_util import symp_process
+# from data_preprocess_util import egGenerater
+# from data_preprocess_util import dataArrange 
+# from data_preprocess_util import del_duplicates
+# from data_preprocess_util import symp_process
 import pickle
 
 def data_preprocess() :
@@ -16,7 +16,17 @@ def data_preprocess() :
 
 
     with open('new_raw_data.csv' , 'r') as csv_file:
-        csv_reader = csv.reader(csv_file) 
+        csv_reader = csv.reader(csv_file)
+        #making the symptom list to send from the end point
+        symp_list_to_be_sent = []
+        for line in csv_reader:
+            temp_line = line[1:]
+            for i in temp_line:
+                if i not in symp_list_to_be_sent:
+                    symp_list_to_be_sent.append(i)
+        with open('symp_list_to_send','wb') as symptom_file:
+            pickle.dump(symp_list_to_be_sent,symptom_file)
+        csv_file.seek(0)
         with open('new_data.csv' , 'w',newline = '') as csv_file1:
             csv_writer = csv.writer(csv_file1)
             for line in csv_reader:
