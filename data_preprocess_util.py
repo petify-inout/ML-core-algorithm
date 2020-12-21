@@ -97,3 +97,10 @@ def symp_process(entry):
     entry = entry.lower()
     entry = entry.replace(" ","")
     return entry
+
+def del_duplicates_from_symptoms(symptom_list):
+    processed = []
+    for i in symptom_list:
+        if i not in processed:
+            processed.append(i)
+    return processed

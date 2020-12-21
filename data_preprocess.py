@@ -47,6 +47,8 @@ def data_preprocess() :
         revised_iniData= pd.DataFrame(revised_iniData_matrix,columns =  symp_list,index = disease_index)
         with open('symp_model','wb') as model_file:
             pickle.dump(symp_list,model_file)
+        with open('disease_obj_list','wb') as model_file:
+            pickle.dump(disease_obj,model_file)
 
     for i in range(len(disease_obj)):
         for j in range(10):

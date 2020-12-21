@@ -23,3 +23,5 @@ symp_model - Contains the symptom_list as a pickle dump file
 encode_model - The sklearn encoding file for symptoms
 
 Using commadline - python del.py (predict/train) --symptoms(only for predict)"a" "b" "c" (a,b and c are arbitrary symptoms)
+
+disease_obj_list = pickle file containing all the disease objects
